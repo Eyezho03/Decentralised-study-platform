@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "canisters": {
+    "study_platform_backend": {
+      "type": "azle",
+      "main": "backend/src/index.ts",
+      "ts": "backend/src/index.ts",
+      "candid": "backend/src/index.ts",
+      "build": "npx azle build study_platform_backend",
+      "wasm": ".azle/study_platform_backend/study_platform_backend.wasm",
+      "gzip": true
+    },
+    "study_platform_frontend": {
+      "type": "assets",
+      "source": ["frontend/build"],
+      "build": "npm run build:frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:8000",
+      "type": "ephemeral"
+    },
+    "ic": {
+      "providers": ["https://ic0.app"],
+      "type": "persistent"
+    }
+  }
+}

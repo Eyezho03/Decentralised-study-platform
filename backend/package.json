@@ -1,0 +1,20 @@
+{
+  "name": "study-platform-backend",
+  "version": "1.0.0",
+  "description": "Backend canister for decentralized study platform",
+  "main": "index.js",
+  "scripts": {
+    "build": "azle build",
+    "start": "azle start",
+    "deploy": "dfx deploy",
+    "test": "azle test"
+  },
+  "dependencies": {
+    "azle": "^0.20.0",
+    "candid": "^0.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
