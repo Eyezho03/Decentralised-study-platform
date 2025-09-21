@@ -3,17 +3,17 @@
   "canisters": {
     "study_platform_backend": {
       "type": "azle",
-      "main": "backend/src/index.ts",
-      "ts": "backend/src/index.ts",
-      "candid": "backend/src/index.ts",
-      "build": "npx azle build study_platform_backend",
-      "wasm": ".azle/study_platform_backend/study_platform_backend.wasm",
-      "gzip": true
+      "main": "backend",
+      "custom": {
+        "candid_gen": "automatic"
+      }
     },
     "study_platform_frontend": {
       "type": "assets",
-      "source": ["frontend/build"],
-      "build": "npm run build:frontend"
+      "source": [
+        "frontend/build"
+      ],
+      "build": "npm run build --prefix frontend"
     }
   },
   "defaults": {
@@ -29,7 +29,9 @@
       "type": "ephemeral"
     },
     "ic": {
-      "providers": ["https://ic0.app"],
+      "providers": [
+        "https://ic0.app"
+      ],
       "type": "persistent"
     }
   }

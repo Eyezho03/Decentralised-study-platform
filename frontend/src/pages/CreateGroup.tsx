@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useData } from '../contexts/DataContext';
 import { BookOpen, Users, Target, Save } from 'lucide-react';
 
 /**
@@ -8,6 +9,7 @@ import { BookOpen, Users, Target, Save } from 'lucide-react';
  */
 const CreateGroup: React.FC = () => {
   const { user } = useAuth();
+  const { createStudyGroup } = useData();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -36,16 +38,23 @@ const CreateGroup: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // In a real app, this would call the canister
-      console.log('Creating group:', formData);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Navigate to groups page
-      navigate('/groups');
+      // Create the study group using real data context
+      const groupId = await createStudyGroup({
+        name: formData.name,
+        description: formData.description,
+        subject: formData.subject,
+        skillLevel: formData.skillLevel,
+        maxMembers: formData.maxMembers,
+        creator: user?.id || 'demo-user'
+      });
+
+      console.log('Group created successfully with ID:', groupId);
+
+      // Navigate to the newly created group
+      navigate(`/groups/${groupId}`);
     } catch (error) {
       console.error('Failed to create group:', error);
+      alert('Failed to create group. Please try again.');
     } finally {
       setIsLoading(false);
     }

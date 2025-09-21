@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { 
-  Users, 
-  BookOpen, 
-  Calendar, 
-  Download, 
+import Chat from '../components/Chat';
+import {
+  Users,
+  BookOpen,
+  Calendar,
+  Download,
   Star,
   Clock,
   Target,
@@ -20,6 +21,7 @@ const GroupDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   // Mock data - in real app, this would be fetched from canister
   const group = {
@@ -162,6 +164,15 @@ const GroupDetail: React.FC = () => {
                 Manage Group
               </button>
             )}
+            {isMember && (
+              <button
+                onClick={() => setIsChatOpen(true)}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2"
+              >
+                <MessageSquare className="h-4 w-4" />
+                <span>Open Chat</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -173,11 +184,10 @@ const GroupDetail: React.FC = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-sm ${
-                activeTab === tab.id
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
+              className={`flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
+                ? 'border-indigo-500 text-indigo-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
             >
               {tab.icon}
               <span>{tab.label}</span>
@@ -352,6 +362,14 @@ const GroupDetail: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Chat Component */}
+      <Chat
+        groupId={group.id}
+        groupName={group.name}
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+      />
     </div>
   );
 };

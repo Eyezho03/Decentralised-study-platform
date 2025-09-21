@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { 
-  Search, 
-  Filter, 
-  Upload, 
-  Download, 
+import { useData } from '../contexts/DataContext';
+import UploadModal from '../components/UploadModal';
+import {
+  Search,
+  Filter,
+  Upload,
+  Download,
   Star,
   FileText,
   Video,
@@ -17,60 +19,11 @@ import {
  */
 const Resources: React.FC = () => {
   const { user } = useAuth();
+  const { resources, uploadResource, refreshData } = useData();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('');
-  const [resources, setResources] = useState([
-    {
-      id: '1',
-      title: 'React Hooks Deep Dive',
-      description: 'Comprehensive guide to React hooks with examples and best practices',
-      type: 'document',
-      uploader: 'alice_dev',
-      uploadDate: BigInt(Date.now() - 86400000),
-      downloads: 45,
-      rating: 4.8
-    },
-    {
-      id: '2',
-      title: 'TypeScript Fundamentals',
-      description: 'Complete TypeScript tutorial for beginners',
-      type: 'video',
-      uploader: 'bob_react',
-      uploadDate: BigInt(Date.now() - 172800000),
-      downloads: 32,
-      rating: 4.6
-    },
-    {
-      id: '3',
-      title: 'Data Structures Cheat Sheet',
-      description: 'Quick reference for common data structures and algorithms',
-      type: 'document',
-      uploader: 'carol_js',
-      uploadDate: BigInt(Date.now() - 259200000),
-      downloads: 67,
-      rating: 4.9
-    },
-    {
-      id: '4',
-      title: 'CSS Grid Layout Guide',
-      description: 'Modern CSS Grid techniques and examples',
-      type: 'link',
-      uploader: 'dave_ui',
-      uploadDate: BigInt(Date.now() - 345600000),
-      downloads: 23,
-      rating: 4.4
-    },
-    {
-      id: '5',
-      title: 'JavaScript Quiz: ES6+',
-      description: 'Test your knowledge of modern JavaScript features',
-      type: 'quiz',
-      uploader: 'eve_ux',
-      uploadDate: BigInt(Date.now() - 432000000),
-      downloads: 89,
-      rating: 4.7
-    }
-  ]);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const resourceTypes = [
     { value: '', label: 'All Types' },
@@ -82,7 +35,7 @@ const Resources: React.FC = () => {
 
   const filteredResources = resources.filter(resource => {
     const matchesSearch = resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         resource.description.toLowerCase().includes(searchTerm.toLowerCase());
+      resource.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = selectedType === '' || resource.type === selectedType;
     return matchesSearch && matchesType;
   });
@@ -107,9 +60,39 @@ const Resources: React.FC = () => {
     }
   };
 
-  const downloadResource = (resourceId: string) => {
-    // In real app, this would call the canister method
-    console.log(`Downloading resource ${resourceId}`);
+  const downloadResource = async (resourceId: string) => {
+    try {
+      // In a real app, this would call the canister method
+      console.log(`Downloading resource ${resourceId}`);
+      // For now, we'll just show a success message
+      alert('Download started! (This would download the actual file in production)');
+    } catch (error) {
+      console.error('Download failed:', error);
+      alert('Download failed. Please try again.');
+    }
+  };
+
+  const handleUpload = async (formData: any) => {
+    setIsUploading(true);
+    try {
+      const resourceId = await uploadResource({
+        title: formData.title,
+        description: formData.description,
+        type: formData.type,
+        ipfsHash: formData.ipfsHash || 'mock-hash-' + Date.now(),
+        uploader: user?.id || 'demo-user'
+      });
+
+      console.log('Resource uploaded successfully with ID:', resourceId);
+      await refreshData();
+      setShowUploadModal(false);
+      alert('Resource uploaded successfully!');
+    } catch (error) {
+      console.error('Upload failed:', error);
+      alert('Upload failed. Please try again.');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -120,7 +103,10 @@ const Resources: React.FC = () => {
           <h1 className="text-3xl font-bold text-gray-900">Study Resources</h1>
           <p className="text-gray-600 mt-2">Browse and share study materials with the community</p>
         </div>
-        <button className="mt-4 md:mt-0 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center">
+        <button
+          onClick={() => setShowUploadModal(true)}
+          className="mt-4 md:mt-0 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center"
+        >
           <Upload className="h-5 w-5 mr-2" />
           Upload Resource
         </button>
@@ -210,7 +196,10 @@ const Resources: React.FC = () => {
           <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">No resources found</h3>
           <p className="text-gray-600 mb-6">Try adjusting your search criteria or upload a new resource.</p>
-          <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center">
+          <button
+            onClick={() => setShowUploadModal(true)}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center"
+          >
             <Upload className="h-5 w-5 mr-2" />
             Upload Your First Resource
           </button>
@@ -241,6 +230,14 @@ const Resources: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Upload Modal */}
+      <UploadModal
+        isOpen={showUploadModal}
+        onClose={() => setShowUploadModal(false)}
+        onUpload={handleUpload}
+        isUploading={isUploading}
+      />
     </div>
   );
 };

@@ -10,11 +10,11 @@
     "test": "azle test"
   },
   "dependencies": {
-    "azle": "^0.20.0",
-    "candid": "^0.20.0"
+    "candid": "^0.2.6"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
+    "azle": "^0.33.0",
     "typescript": "^5.0.0"
   }
 }

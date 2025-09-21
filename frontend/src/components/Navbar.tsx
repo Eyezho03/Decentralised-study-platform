@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { BookOpen, User, LogOut, Coins, Flame } from 'lucide-react';
+import { NotificationBell } from '../contexts/NotificationContext';
+import { BookOpen, User, LogOut, Coins, Flame, Menu, X } from 'lucide-react';
 
 /**
  * Navigation bar component with authentication state and user info
@@ -9,6 +10,7 @@ import { BookOpen, User, LogOut, Coins, Flame } from 'lucide-react';
 const Navbar: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -22,43 +24,50 @@ const Navbar: React.FC = () => {
             <span className="text-xl font-bold gradient-text">Study Platform</span>
           </Link>
 
-          {/* Navigation Links */}
+          {/* Desktop Navigation Links */}
           {isAuthenticated && (
             <div className="hidden md:flex items-center space-x-8">
               <Link
                 to="/dashboard"
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/dashboard')
-                    ? 'bg-indigo-100 text-indigo-700'
-                    : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
-                }`}
+                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/dashboard')
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                  }`}
               >
                 <BookOpen className="h-4 w-4" />
                 <span>Dashboard</span>
               </Link>
               <Link
                 to="/groups"
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/groups')
-                    ? 'bg-indigo-100 text-indigo-700'
-                    : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
-                }`}
+                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/groups')
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                  }`}
               >
                 <BookOpen className="h-4 w-4" />
                 <span>Study Groups</span>
               </Link>
               <Link
                 to="/resources"
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/resources')
-                    ? 'bg-indigo-100 text-indigo-700'
-                    : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
-                }`}
+                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/resources')
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                  }`}
               >
                 <BookOpen className="h-4 w-4" />
                 <span>Resources</span>
               </Link>
             </div>
+          )}
+
+          {/* Mobile Menu Button */}
+          {isAuthenticated && (
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
+            >
+              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
           )}
 
           {/* User Info and Actions */}
@@ -76,6 +85,9 @@ const Navbar: React.FC = () => {
                     <span className="font-medium">{user?.studyStreak || 0} days</span>
                   </div>
                 </div>
+
+                {/* Notification Bell */}
+                <NotificationBell />
 
                 {/* Profile Dropdown */}
                 <div className="flex items-center space-x-2">
@@ -105,6 +117,59 @@ const Navbar: React.FC = () => {
             )}
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {isAuthenticated && isMobileMenuOpen && (
+          <div className="md:hidden border-t border-white/20 py-4">
+            <div className="space-y-2">
+              <Link
+                to="/dashboard"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/dashboard')
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                  }`}
+              >
+                <BookOpen className="h-4 w-4" />
+                <span>Dashboard</span>
+              </Link>
+              <Link
+                to="/groups"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/groups')
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                  }`}
+              >
+                <BookOpen className="h-4 w-4" />
+                <span>Study Groups</span>
+              </Link>
+              <Link
+                to="/resources"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/resources')
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                  }`}
+              >
+                <BookOpen className="h-4 w-4" />
+                <span>Resources</span>
+              </Link>
+
+              {/* Mobile User Stats */}
+              <div className="flex items-center justify-between px-3 py-2 border-t border-gray-200 mt-4">
+                <div className="flex items-center space-x-1 text-yellow-600">
+                  <Coins className="h-4 w-4" />
+                  <span className="text-sm font-medium">{user?.studyTokens?.toString() || '0'}</span>
+                </div>
+                <div className="flex items-center space-x-1 text-orange-600">
+                  <Flame className="h-4 w-4" />
+                  <span className="text-sm font-medium">{user?.studyStreak || 0} days</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );

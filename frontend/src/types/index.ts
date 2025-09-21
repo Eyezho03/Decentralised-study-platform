@@ -94,7 +94,9 @@ export interface AuthContextType {
   isLoading: boolean;
   user: UserProfile | null;
   login: () => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
+  principal: any | null;
+  authClient: any | null;
 }
 
 export interface CanisterContextType {

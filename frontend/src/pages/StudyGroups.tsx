@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { 
-  Search, 
-  Filter, 
-  Plus, 
-  Users, 
-  BookOpen, 
+import { useData } from '../contexts/DataContext';
+import {
+  Search,
+  Filter,
+  Plus,
+  Users,
+  BookOpen,
   Star,
   Clock,
   Target
@@ -17,78 +18,41 @@ import {
  */
 const StudyGroups: React.FC = () => {
   const { user } = useAuth();
+  const { studyGroups, joinStudyGroup, refreshData } = useData();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('');
   const [selectedSkillLevel, setSelectedSkillLevel] = useState('');
-  const [studyGroups, setStudyGroups] = useState([
-    {
-      id: '1',
-      name: 'Advanced React Development',
-      description: 'Deep dive into React hooks, context, and performance optimization',
-      subject: 'Computer Science',
-      skillLevel: 'advanced',
-      maxMembers: 8,
-      currentMembers: 5,
-      members: ['user1', 'user2', 'user3', 'user4', 'user5'],
-      creator: 'user1',
-      resources: [],
-      studySessions: [],
-      createdAt: BigInt(Date.now() - 86400000),
-      isActive: true
-    },
-    {
-      id: '2',
-      name: 'Mathematics Study Group',
-      description: 'Calculus and linear algebra problem solving sessions',
-      subject: 'Mathematics',
-      skillLevel: 'intermediate',
-      maxMembers: 12,
-      currentMembers: 8,
-      members: ['user1', 'user2', 'user3', 'user4', 'user5', 'user6', 'user7', 'user8'],
-      creator: 'user2',
-      resources: [],
-      studySessions: [],
-      createdAt: BigInt(Date.now() - 172800000),
-      isActive: true
-    },
-    {
-      id: '3',
-      name: 'Physics Fundamentals',
-      description: 'Basic physics concepts and problem solving',
-      subject: 'Physics',
-      skillLevel: 'beginner',
-      maxMembers: 10,
-      currentMembers: 3,
-      members: ['user1', 'user2', 'user3'],
-      creator: 'user3',
-      resources: [],
-      studySessions: [],
-      createdAt: BigInt(Date.now() - 259200000),
-      isActive: true
-    }
-  ]);
+  const [isJoining, setIsJoining] = useState<string | null>(null);
 
   const subjects = ['All', 'Computer Science', 'Mathematics', 'Physics', 'Chemistry', 'Biology'];
   const skillLevels = ['All', 'beginner', 'intermediate', 'advanced'];
 
   const filteredGroups = studyGroups.filter(group => {
     const matchesSearch = group.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         group.description.toLowerCase().includes(searchTerm.toLowerCase());
+      group.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesSubject = selectedSubject === '' || selectedSubject === 'All' || group.subject === selectedSubject;
     const matchesSkillLevel = selectedSkillLevel === '' || selectedSkillLevel === 'All' || group.skillLevel === selectedSkillLevel;
-    
+
     return matchesSearch && matchesSubject && matchesSkillLevel;
   });
 
-  const joinGroup = (groupId: string) => {
-    // In a real app, this would call the canister
-    console.log(`Joining group ${groupId}`);
-    // Update local state for demo
-    setStudyGroups(prev => prev.map(group => 
-      group.id === groupId 
-        ? { ...group, currentMembers: group.currentMembers + 1, members: [...group.members, user?.id || 'current-user'] }
-        : group
-    ));
+  const joinGroup = async (groupId: string) => {
+    setIsJoining(groupId);
+    try {
+      const success = await joinStudyGroup(groupId);
+      if (success) {
+        console.log(`Successfully joined group ${groupId}`);
+        // Refresh data to get updated group information
+        await refreshData();
+      } else {
+        alert('Failed to join group. It might be full or you might already be a member.');
+      }
+    } catch (error) {
+      console.error('Error joining group:', error);
+      alert('Failed to join group. Please try again.');
+    } finally {
+      setIsJoining(null);
+    }
   };
 
   const getSkillLevelColor = (level: string) => {
@@ -222,9 +186,10 @@ const StudyGroups: React.FC = () => {
                 </Link>
                 <button
                   onClick={() => joinGroup(group.id)}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                  disabled={isJoining === group.id}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Join Group
+                  {isJoining === group.id ? 'Joining...' : 'Join Group'}
                 </button>
               </div>
             </div>
