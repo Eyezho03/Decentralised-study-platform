@@ -1,20 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Decentralized Study Platform - Learn together, earn together"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <title>Decentralized Study Platform</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Decentralized Study Platform - Learn together, earn together" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <title>Decentralized Study Platform</title>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+
+  <!-- Handle MetaMask gracefully -->
+  <script>
+    // Prevent MetaMask errors from showing in console
+    window.addEventListener('error', function (e) {
+      if (e.message && e.message.includes('MetaMask')) {
+        e.preventDefault();
+        console.log('MetaMask extension detected but not used in this app');
+      }
+    });
+
+    // Handle MetaMask connection attempts gracefully
+    if (typeof window.ethereum !== 'undefined') {
+      console.log('MetaMask detected but not required for this decentralized study platform');
+    }
+  </script>
+</body>
+
 </html>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { NotificationBell } from '../contexts/NotificationContext';
-import { BookOpen, User, LogOut, Coins, Flame, Menu, X } from 'lucide-react';
+import { BookOpen, User, LogOut, Coins, Flame, Menu, X, Video, Brain, Trophy, FileText, Smartphone } from 'lucide-react';
 
 /**
  * Navigation bar component with authentication state and user info
@@ -57,6 +57,46 @@ const Navbar: React.FC = () => {
                 <BookOpen className="h-4 w-4" />
                 <span>Resources</span>
               </Link>
+              <Link
+                to="/sessions"
+                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/sessions')
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                  }`}
+              >
+                <Video className="h-4 w-4" />
+                <span>Sessions</span>
+              </Link>
+              <Link
+                to="/ai-recommendations"
+                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/ai-recommendations')
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                  }`}
+              >
+                <Brain className="h-4 w-4" />
+                <span>AI Recommendations</span>
+              </Link>
+              <Link
+                to="/gamification"
+                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/gamification')
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                  }`}
+              >
+                <Trophy className="h-4 w-4" />
+                <span>Gamification</span>
+              </Link>
+              <Link
+                to="/documents"
+                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/documents')
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                  }`}
+              >
+                <FileText className="h-4 w-4" />
+                <span>Documents</span>
+              </Link>
             </div>
           )}
 
@@ -88,6 +128,18 @@ const Navbar: React.FC = () => {
 
                 {/* Notification Bell */}
                 <NotificationBell />
+
+                {/* Mobile App Button */}
+                <button
+                  onClick={() => {
+                    // This would trigger the mobile app modal
+                    console.log('Mobile app clicked');
+                  }}
+                  className="p-2 rounded-full text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
+                  title="Mobile App"
+                >
+                  <Smartphone className="h-5 w-5" />
+                </button>
 
                 {/* Profile Dropdown */}
                 <div className="flex items-center space-x-2">
@@ -154,6 +206,50 @@ const Navbar: React.FC = () => {
               >
                 <BookOpen className="h-4 w-4" />
                 <span>Resources</span>
+              </Link>
+              <Link
+                to="/sessions"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/sessions')
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                  }`}
+              >
+                <Video className="h-4 w-4" />
+                <span>Sessions</span>
+              </Link>
+              <Link
+                to="/ai-recommendations"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/ai-recommendations')
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                  }`}
+              >
+                <Brain className="h-4 w-4" />
+                <span>AI Recommendations</span>
+              </Link>
+              <Link
+                to="/gamification"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/gamification')
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                  }`}
+              >
+                <Trophy className="h-4 w-4" />
+                <span>Gamification</span>
+              </Link>
+              <Link
+                to="/documents"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/documents')
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                  }`}
+              >
+                <FileText className="h-4 w-4" />
+                <span>Documents</span>
               </Link>
 
               {/* Mobile User Stats */}

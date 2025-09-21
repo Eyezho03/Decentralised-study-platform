@@ -34,7 +34,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (savedUser) {
             try {
               const userData = JSON.parse(savedUser);
-              setUser(userData);
+              // Convert string values back to BigInt for compatibility
+              const restoredUser: UserProfile = {
+                ...userData,
+                studyTokens: BigInt(userData.studyTokens || '100'),
+                createdAt: BigInt(userData.createdAt || Date.now().toString()),
+                lastActiveAt: BigInt(userData.lastActiveAt || Date.now().toString())
+              };
+              setUser(restoredUser);
               setIsAuthenticated(true);
             } catch (error) {
               console.error('Error parsing saved user data:', error);
@@ -56,7 +63,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             };
             setUser(basicUser);
             setIsAuthenticated(true);
-            localStorage.setItem('user', JSON.stringify(basicUser));
+
+            // Convert BigInt values to strings for localStorage
+            const serializableUser = {
+              ...basicUser,
+              studyTokens: basicUser.studyTokens.toString(),
+              createdAt: basicUser.createdAt.toString(),
+              lastActiveAt: basicUser.lastActiveAt.toString()
+            };
+            localStorage.setItem('user', JSON.stringify(serializableUser));
           }
         }
       } catch (error) {
@@ -102,7 +117,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         setUser(mockUser);
         setIsAuthenticated(true);
-        localStorage.setItem('user', JSON.stringify(mockUser));
+
+        // Convert BigInt values to strings for localStorage
+        const serializableUser = {
+          ...mockUser,
+          studyTokens: mockUser.studyTokens.toString(),
+          createdAt: mockUser.createdAt.toString(),
+          lastActiveAt: mockUser.lastActiveAt.toString()
+        };
+        localStorage.setItem('user', JSON.stringify(serializableUser));
       } else {
         // Real Internet Identity authentication for production
         await authClient.login({
@@ -127,7 +150,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             setUser(realUser);
             setIsAuthenticated(true);
-            localStorage.setItem('user', JSON.stringify(realUser));
+
+            // Convert BigInt values to strings for localStorage
+            const serializableUser = {
+              ...realUser,
+              studyTokens: realUser.studyTokens.toString(),
+              createdAt: realUser.createdAt.toString(),
+              lastActiveAt: realUser.lastActiveAt.toString()
+            };
+            localStorage.setItem('user', JSON.stringify(serializableUser));
           }
         });
       }

@@ -15,7 +15,8 @@ import {
   Award,
   Plus,
   ArrowRight,
-  Info
+  Info,
+  FileText
 } from 'lucide-react';
 
 /**
@@ -82,11 +83,18 @@ const Dashboard: React.FC = () => {
       color: 'bg-purple-500 hover:bg-purple-600'
     },
     {
-      title: 'Find Matches',
-      description: 'Get study recommendations',
-      icon: <Target className="h-6 w-6" />,
-      link: '/groups',
-      color: 'bg-orange-500 hover:bg-orange-600'
+      title: 'Gamification',
+      description: 'Earn badges and climb leaderboards',
+      icon: <Award className="h-6 w-6" />,
+      link: '/gamification',
+      color: 'bg-yellow-500 hover:bg-yellow-600'
+    },
+    {
+      title: 'Collaborative Documents',
+      description: 'Create and edit documents together',
+      icon: <FileText className="h-6 w-6" />,
+      link: '/documents',
+      color: 'bg-indigo-500 hover:bg-indigo-600'
     }
   ];
 
