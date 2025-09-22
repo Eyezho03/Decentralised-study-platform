@@ -4,8 +4,8 @@
   "description": "A decentralized study group platform on Internet Computer with token incentives",
   "main": "index.js",
   "scripts": {
-    "build": "npm run build:backend && npm run build:frontend",
-    "build:backend": "cd backend && npm run build",
+    "build": "npm run build:frontend",
+    "build:backend": "azle build study_platform_backend",
     "build:frontend": "cd frontend && npm run build",
     "start": "npm run start:backend & npm run start:frontend",
     "start:backend": "cd backend && npm start",
@@ -27,5 +27,8 @@
   "devDependencies": {
     "@types/node": "^20.0.0",
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "azle": "^0.33.0"
   }
 }

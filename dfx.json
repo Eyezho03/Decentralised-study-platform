@@ -1,13 +1,6 @@
 {
   "version": 1,
   "canisters": {
-    "study_platform_backend": {
-      "type": "azle",
-      "main": "backend",
-      "custom": {
-        "candid_gen": "automatic"
-      }
-    },
     "study_platform_frontend": {
       "type": "assets",
       "source": [

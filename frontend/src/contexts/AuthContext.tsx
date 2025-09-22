@@ -92,12 +92,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error('Auth client not initialized');
       }
 
-      // For local development, use a mock authentication
-      // In production, this would use Internet Identity
-      const isLocalDev = process.env.NODE_ENV === 'development' ||
-        window.location.hostname === 'localhost';
+      // Check if we're in production or development
+      const isProduction = process.env.NODE_ENV === 'production' && 
+        !window.location.hostname.includes('localhost');
 
-      if (isLocalDev) {
+      if (!isProduction) {
         // Mock authentication for local development
         const mockPrincipal = Principal.anonymous();
         setPrincipal(mockPrincipal);
